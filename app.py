@@ -140,9 +140,8 @@ if page == "Client Intake Form":
 elif page == "Admin Document Generator":
     st.title("Admin Document Assembly Portal")
     
-    # Passcode Protection
     password = st.text_input("Enter Attorney/Staff Passcode:", type="password")
-    if password != "macneillaw":  # You can change this passcode whenever needed
+    if password != "macneillaw":
         st.info("Please enter the passcode to access document drafting.")
         st.stop()
 
@@ -152,11 +151,9 @@ elif page == "Admin Document Generator":
     if df.empty:
         st.warning("No client submissions found in database.")
     else:
-        # Create client dropdown list
         client_options = [f"{row['Ward_Full_Name']} (Client: {row['Client_Full_Name']})" for idx, row in df.iterrows()]
         selected_client_str = st.selectbox("Select Client Intake to Draft:", client_options)
         
-        # Get selected client row index
         selected_idx = client_options.index(selected_client_str)
         client_data = df.iloc[selected_idx].to_dict()
 
@@ -174,9 +171,14 @@ elif page == "Admin Document Generator":
         # GENERATE PERSON GUARDIANSHIP PACKET
         if st.button("Generate Person Guardianship Packet (.zip)"):
             try:
-                # List of templates in the bundle
+                ward_name = client_data.get('Ward_Full_Name', 'Ward')
+                
+                # List of all 4 templates in the packet
                 templates_to_process = [
-                    ("templates/person/Application_Person.docx", f"01_Application_Guardianship_{client_data.get('Ward_Full_Name')}.docx")
+                    ("templates/person/Application_Person.docx", f"01_Application_Guardianship_{ward_name}.docx"),
+                    ("templates/person/Motion_AAL.docx", f"02_Motion_Appointment_AAL_{ward_name}.docx"),
+                    ("templates/person/Order_AAL.docx", f"03_Order_Appointing_AAL_{ward_name}.docx"),
+                    ("templates/person/Order_Guardianship.docx", f"04_Order_Appointing_Permanent_Guardian_{ward_name}.docx")
                 ]
 
                 zip_buffer = io.BytesIO()
@@ -196,8 +198,8 @@ elif page == "Admin Document Generator":
                 st.download_button(
                     label="Download Completed Packet (.zip)",
                     data=zip_buffer,
-                    file_name=f"Guardianship_Packet_{client_data.get('Ward_Full_Name')}.zip",
+                    file_name=f"Guardianship_Packet_{ward_name}.zip",
                     mime="application/zip"
                 )
             except Exception as e:
-                st.error(f"Error generating packet: {e}. Ensure 'Application_Person.docx' exists in GitHub under 'templates/person/'.")
+                st.error(f"Error generating packet: {e}. Ensure all .docx templates exist in GitHub under 'templates/person/'.")
