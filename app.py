@@ -162,47 +162,83 @@ elif page == "Admin Document Generator":
             "Ward Name": client_data.get("Ward_Full_Name"),
             "Client Name": client_data.get("Client_Full_Name"),
             "County": client_data.get("Ward_Res_County"),
-            "Medical Condition": client_data.get("Ward_Medical_Condition")
+            "Guardianship Type": client_data.get("Guardianship_Type_Needed")
         })
 
         st.markdown("---")
         st.subheader("Generate Pleading Packets")
 
-        # GENERATE PERSON GUARDIANSHIP PACKET
-        if st.button("Generate Person Guardianship Packet (.zip)"):
-            try:
-                ward_name = client_data.get('Ward_Full_Name', 'Ward')
-                
-                # List of all 7 templates in the packet
-                templates_to_process = [
-                    ("templates/person/Application_Person.docx", f"01_Application_Guardianship_{ward_name}.docx"),
-                    ("templates/person/Motion_AAL.docx", f"02_Motion_Appointment_AAL_{ward_name}.docx"),
-                    ("templates/person/Order_AAL.docx", f"03_Order_Appointing_AAL_{ward_name}.docx"),
-                    ("templates/person/Affidavit_1051.104.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
-                    ("templates/person/Waiver_Notice.docx", f"05_Waiver_of_Notice_{ward_name}.docx"),
-                    ("templates/person/Order_Guardianship.docx", f"06_Order_Appointing_Permanent_Guardian_{ward_name}.docx"),
-                    ("templates/person/Oath.docx", f"07_Oath_of_Guardian_{ward_name}.docx")
-                ]
+        col1, col2 = st.columns(2)
 
-                zip_buffer = io.BytesIO()
-                with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
-                    for tpl_path, output_filename in templates_to_process:
-                        doc = DocxTemplate(tpl_path)
-                        doc.render(client_data)
-                        
-                        doc_io = io.BytesIO()
-                        doc.save(doc_io)
-                        doc_io.seek(0)
-                        
-                        zip_file.writestr(output_filename, doc_io.getvalue())
+        # OPTION A: PERSON ONLY PACKET
+        with col1:
+            st.markdown("### Person Only")
+            if st.button("Generate Person Only Packet (.zip)"):
+                try:
+                    ward_name = client_data.get('Ward_Full_Name', 'Ward')
+                    templates_to_process = [
+                        ("templates/person/Application_Person.docx", f"01_Application_Guardianship_{ward_name}.docx"),
+                        ("templates/person/Motion_AAL.docx", f"02_Motion_Appointment_AAL_{ward_name}.docx"),
+                        ("templates/person/Order_AAL.docx", f"03_Order_Appointing_AAL_{ward_name}.docx"),
+                        ("templates/person/Affidavit_Notice.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
+                        ("templates/person/Waiver_Notice.docx", f"05_Waiver_of_Notice_{ward_name}.docx"),
+                        ("templates/person/Order_Guardianship.docx", f"06_Order_Appointing_Permanent_Guardian_{ward_name}.docx"),
+                        ("templates/person/Oath.docx", f"07_Oath_of_Guardian_{ward_name}.docx")
+                    ]
 
-                zip_buffer.seek(0)
-                
-                st.download_button(
-                    label="Download Completed Packet (.zip)",
-                    data=zip_buffer,
-                    file_name=f"Guardianship_Person_Packet_{ward_name}.zip",
-                    mime="application/zip"
-                )
-            except Exception as e:
-                st.error(f"Error generating packet: {e}. Ensure all .docx templates exist in GitHub under 'templates/person/'.")
+                    zip_buffer = io.BytesIO()
+                    with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
+                        for tpl_path, output_filename in templates_to_process:
+                            doc = DocxTemplate(tpl_path)
+                            doc.render(client_data)
+                            doc_io = io.BytesIO()
+                            doc.save(doc_io)
+                            doc_io.seek(0)
+                            zip_file.writestr(output_filename, doc_io.getvalue())
+
+                    zip_buffer.seek(0)
+                    st.download_button(
+                        label="Download Person Packet (.zip)",
+                        data=zip_buffer,
+                        file_name=f"Guardianship_Person_Packet_{ward_name}.zip",
+                        mime="application/zip"
+                    )
+                except Exception as e:
+                    st.error(f"Error: {e}. Check files in 'templates/person/'.")
+
+        # OPTION B: PERSON & ESTATE PACKET
+        with col2:
+            st.markdown("### Person & Estate")
+            if st.button("Generate Person & Estate Packet (.zip)"):
+                try:
+                    ward_name = client_data.get('Ward_Full_Name', 'Ward')
+                    templates_to_process = [
+                        ("templates/person_and_estate/Application_Person_Estate.docx", f"01_Application_Guardianship_Person_and_Estate_{ward_name}.docx"),
+                        ("templates/person/Motion_AAL.docx", f"02_Motion_Appointment_AAL_{ward_name}.docx"),
+                        ("templates/person/Order_AAL.docx", f"03_Order_Appointing_AAL_{ward_name}.docx"),
+                        ("templates/person/Affidavit_Notice.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
+                        ("templates/person/Waiver_Notice.docx", f"05_Waiver_of_Notice_{ward_name}.docx"),
+                        ("templates/person_and_estate/Inventory_Appraisement.docx", f"06_Inventory_Appraisement_{ward_name}.docx"),
+                        ("templates/person_and_estate/Order_Approving_Inventory.docx", f"07_Order_Approving_Inventory_{ward_name}.docx"),
+                        ("templates/person/Oath.docx", f"08_Oath_of_Guardian_{ward_name}.docx")
+                    ]
+
+                    zip_buffer = io.BytesIO()
+                    with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
+                        for tpl_path, output_filename in templates_to_process:
+                            doc = DocxTemplate(tpl_path)
+                            doc.render(client_data)
+                            doc_io = io.BytesIO()
+                            doc.save(doc_io)
+                            doc_io.seek(0)
+                            zip_file.writestr(output_filename, doc_io.getvalue())
+
+                    zip_buffer.seek(0)
+                    st.download_button(
+                        label="Download Person & Estate Packet (.zip)",
+                        data=zip_buffer,
+                        file_name=f"Guardianship_Person_and_Estate_Packet_{ward_name}.zip",
+                        mime="application/zip"
+                    )
+                except Exception as e:
+                    st.error(f"Error: {e}. Check files in 'templates/person_and_estate/'.")
