@@ -180,7 +180,7 @@ elif page == "Admin Document Generator":
                         ("templates/person/Application_Person.docx", f"01_Application_Guardianship_{ward_name}.docx"),
                         ("templates/person/Motion_AAL.docx", f"02_Motion_Appointment_AAL_{ward_name}.docx"),
                         ("templates/person/Order_AAL.docx", f"03_Order_Appointing_AAL_{ward_name}.docx"),
-                        ("templates/person/Affidavit_Notice.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
+                        ("templates/person/Affidavit_1051.104.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
                         ("templates/person/Waiver_Notice.docx", f"05_Waiver_of_Notice_{ward_name}.docx"),
                         ("templates/person/Order_Guardianship.docx", f"06_Order_Appointing_Permanent_Guardian_{ward_name}.docx"),
                         ("templates/person/Oath.docx", f"07_Oath_of_Guardian_{ward_name}.docx")
@@ -216,7 +216,7 @@ elif page == "Admin Document Generator":
                         ("templates/person_and_estate/Application_Person_Estate.docx", f"01_Application_Guardianship_Person_and_Estate_{ward_name}.docx"),
                         ("templates/person/Motion_AAL.docx", f"02_Motion_Appointment_AAL_{ward_name}.docx"),
                         ("templates/person/Order_AAL.docx", f"03_Order_Appointing_AAL_{ward_name}.docx"),
-                        ("templates/person/Affidavit_Notice.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
+                        ("templates/person/Affidavit_1051.104.docx", f"04_Affidavit_Regarding_Notice_{ward_name}.docx"),
                         ("templates/person/Waiver_Notice.docx", f"05_Waiver_of_Notice_{ward_name}.docx"),
                         ("templates/person_and_estate/Order_Guardianship_Person_Estate.docx", f"06_Order_Appointing_Permanent_Guardian_{ward_name}.docx"),
                         ("templates/person_and_estate/Inventory_Appraisement.docx", f"07_Inventory_Appraisement_{ward_name}.docx"),
